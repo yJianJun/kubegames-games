@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/bitly/go-simplejson"
 	"github.com/kubegames/kubegames-games/internal/pkg/rand"
 	"github.com/kubegames/kubegames-games/pkg/battle/landlord2/config"
 	"github.com/kubegames/kubegames-games/pkg/battle/landlord2/data"
@@ -46,6 +47,7 @@ type DouDizhu struct {
 	InAnimation           bool                 // 是否动画时间中
 }
 
+// CurrentPlayer 当前玩家
 type CurrentPlayer struct {
 	UserID     int64 // 用户ID
 	ChairID    int32 // 作为ID
@@ -58,7 +60,7 @@ type CurrentPlayer struct {
 // DouDizhuRoom 斗地主房间
 type DouDizhuRoom struct{}
 
-// InitTable 初始化游戏房间
+// InitTable 使用给定的牌桌初始化游戏室。
 func (room *DouDizhuRoom) InitTable(table table.TableInterface) {
 
 	game := new(DouDizhu)
@@ -105,6 +107,30 @@ func (game *DouDizhu) InitConfig() {
 }
 
 // OnActionUserSitDown 用户坐下
+//
+// 该方法用于处理斗地主游戏中用户坐下的事件。
+// 它接受一个代表用户的“PlayerInterface”，一个代表订单索引的“int”，
+// 和一个代表配置的“string”。该方法返回一个 `MatchKind` 指示是否
+// 用户成功坐下或遇到错误。该方法首先检查用户是否已经
+// 在玩家列表中。如果没有，则检查游戏状态是否允许用户进入。如果是，则为用户分配一个空座位并初始化其属性。它还将用户添加到游戏和主席列表中。如果用户是机器人，则会加载机器人配置。如果用户是重新连接的用户，则它将“重新连接”标志设置为 true。
+//
+// 该方法不返回任何内容。
+//
+// 用法示例：
+// // 假设“game”是“DouDizhu”结构体的一个实例。
+// matchKind := game.OnActionUserSitDown(user, orderIndex, config)
+//
+// 注意：
+// - `player.PlayerInterface` 接口用于表示游戏中的玩家。
+// - `table.MatchKind` 类型用于表示不同种类的匹配结果。
+// - `log.Tracef` 函数在标准记录器的“Trace”级别记录一条消息。
+// - `msg.GameStatus_GameInitStatus` 常量表示游戏初始化状态。
+// - `table.SitDownErrorNomal` 和 `table.SitDownErrorOver` 常量代表不同类型的坐下错误。
+// - `data.User` 结构代表斗地主游戏中具有各种属性的玩家。
+// - `msg.UserStatus_UserNormal` 常量表示正常用户状态。
+// - `table.SitDownOk` 常量表示成功的坐下结果。
+// - `appMessage.GameLog` 结构代表游戏日志条目。
+// - `log.Warnf` 函数在标准记录器上以“警告”级别记录一条消息。
 func (game *DouDizhu) OnActionUserSitDown(userInter player.PlayerInterface, orderIndex int, config string) table.MatchKind {
 	userID := userInter.GetID()
 	log.Tracef("玩家 %d 进入房间 %d", userID, game.Table.GetID())

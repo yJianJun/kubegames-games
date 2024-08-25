@@ -437,7 +437,22 @@ func CardsToString(cards []byte) (cardsStr string) {
 	return
 }
 
+// landlord 从扑克牌开始
 // TransformCards 转译牌
+// 将字节切片表示的牌转译为字符串表示的牌
+// 输入参数cards是一个字节切片，其中每个字节表示一张牌
+// 返回值transCards是一个字符串切片，表示转译后的牌
+// 转译规则如下：
+// - 牌值：
+//   - 0x1 -> "3", 0x2 -> "4", 0x3 -> "5", 0x4 -> "6", 0x5 -> "7",
+//   - 0x6 -> "8", 0x7 -> "9", 0x8 -> "10", 0x9 -> "J", 0xa -> "Q",
+//   - 0xb -> "K", 0xc -> "A", 0xd -> "2", 0xe -> "小王", 0xf -> "大王"
+//
+// - 花色：
+//   - 0x1 -> "♦️", 0x2 -> "♣️", 0x3 -> "♥️", 0x4 -> "♠️"
+//
+// - 如果牌值大于0xd，则将花色设为空字符串
+// 注意：函数依赖于GetCardValueAndColor函数来解析牌的牌值和花色
 func TransformCards(cards []byte) (transCards []string) {
 
 	for _, v := range cards {

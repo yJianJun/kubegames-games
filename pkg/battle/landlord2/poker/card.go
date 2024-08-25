@@ -11,6 +11,7 @@ type GamePoker struct {
 	Cards []byte
 }
 
+// Deck 代表一副纸牌。
 // 使用一副牌, 共54张牌 大小关系：大王>小王>2>A>K>…>4>3 方梅红黑
 var Deck = []byte{
 	//3 , 4   , 5   , 6   , 7   , 8   , 9   , 10  , J   , Q   , K   , A   , 2   , 小王 , 大王
@@ -20,11 +21,13 @@ var Deck = []byte{
 	0x14, 0x24, 0x34, 0x44, 0x54, 0x64, 0x74, 0x84, 0x94, 0xa4, 0xb4, 0xc4, 0xd4,
 }
 
+// Unit 表示值的字节数组。
+// 使用 GetCardValueAndColor 获取卡片的值和颜色。
 var Unit = []byte{
 	0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd,
 }
 
-// HandCards 手牌
+// Cards 手牌
 type HandCards struct {
 	Cards       []byte // 手牌
 	UserID      int64  // 持有这幅手牌的用户ID
@@ -32,7 +35,7 @@ type HandCards struct {
 	CardsType   int32  // 牌型
 }
 
-// SolutionCards 牌解
+// SolutionCards 代表纸牌游戏的解决方案
 type SolutionCards struct {
 	Cards     []byte        // 手牌
 	CardsType msg.CardsType // 牌型
@@ -54,7 +57,7 @@ func (gamePoker *GamePoker) ShuffleCards() {
 	})
 }
 
-// DrawCard
+// DrawCard 从牌组中抽取指定数量的牌
 func (gamePoker *GamePoker) DrawCard(count int) (cards []byte) {
 
 	length := len(gamePoker.Cards)
@@ -99,7 +102,7 @@ func PositiveSortCards(cards []byte) []byte {
 	return cards
 }
 
-// 将牌按照牌值进行排序
+// SortCards 将牌按照牌值进行排序
 func SortCards(cards []byte) []byte {
 	for i := 0; i < len(cards)-1; i++ {
 		for j := 0; j < (len(cards) - 1 - i); j++ {
@@ -125,20 +128,18 @@ func InByteArr(v byte, arr []byte) bool {
 	return false
 }
 
-// 获取最小的牌
+// GetSmallestCard 从卡片组中检索最小的卡片。
 func GetSmallestCard(cards []byte) (smallestCard byte) {
-
 	smallestCard = cards[0]
 	for _, card := range cards {
 		if card < smallestCard {
 			smallestCard = card
 		}
 	}
-
 	return
 }
 
-// HaveBigCard 有没有2或者大小王的牌
+// HaveBigCard 检查是否有任何牌的点数大于 12（2 或大小王牌）。
 func HaveBigCard(cards []byte) bool {
 	for _, card := range cards {
 		value, _ := GetCardValueAndColor(card)
@@ -167,6 +168,8 @@ func HaveRocket(cards []byte) bool {
 }
 
 // HaveKing 有王牌
+// 判断给定的牌组中是否包含王牌，即牌值大于0xe0的牌
+// 如果包含王牌，则返回true；否则返回false
 func HaveKing(cards []byte) bool {
 	for _, card := range cards {
 		if card > 0xe0 {
@@ -177,7 +180,7 @@ func HaveKing(cards []byte) bool {
 	return false
 }
 
-// GetKingCount 获取王牌 牌数
+// GetKingCount 获取王牌牌数
 func GetKingCount(cards []byte) (count int) {
 	for _, card := range cards {
 		if card > 0xe0 {
