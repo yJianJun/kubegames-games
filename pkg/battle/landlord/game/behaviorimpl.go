@@ -14,9 +14,14 @@ import (
 	b3core "github.com/magicsea/behavior3go/core"
 )
 
-//临时机器人，在初始化的时候传进来，这样IsInRange、IsEqual这些节点才能捕获不同游戏所导出的变量，该变量只有在编译表达式的时候才有用
+// 临时机器人，在初始化的时候传进来，这样IsInRange、IsEqual这些节点才能捕获不同游戏所导出的变量，
+// 该变量只有在编译表达式的时候才有用
 var tempRobot robot
 
+// fillEnv 将字符串map作为键，将接口作为值，
+// 和一个机器人类型的对象，并添加导出的字段
+// map上的机器人对象。
+// 如果 env 为 nil，则创建一个新map
 func fillEnv(env map[string]interface{}, robot robot) map[string]interface{} {
 	if nil == env {
 		env = make(map[string]interface{})
@@ -32,7 +37,9 @@ func fillEnv(env map[string]interface{}, robot robot) map[string]interface{} {
 	return env
 }
 
-//屎山函数，求优化
+// GetProperty 返回给定设置对象中键指定的属性值。
+// 它首先尝试以浮点形式获取属性，然后以整数形式获取属性，然后以 int64 形式获取属性，然后以字符串形式获取属性，
+// 最后作为布尔值。如果无法解析该属性，则会记录错误并返回 nil。
 func GetProperty(key string, setting *b3cfg.BTNodeCfg) interface{} {
 	//errors.Catch()函数会打印大量的堆栈，这里单独定义个函数捕获异常
 	catchFn := func(err *error) {
