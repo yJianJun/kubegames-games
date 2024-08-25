@@ -4,7 +4,7 @@ package game
 //import (
 //	"github.com/kubegames/kubegames-sdk/pkg/log"
 //	"github.com/kubegames/kubegames-games/internal/pkg/rand"
-//	"github.com/kubegames/kubegames-games/pkg/battle/landlord/poker"
+//	"github.com/kubegames/kubegames-games/pkg/battleandlord/poker"
 //)
 //
 //type SolutionSequence struct {

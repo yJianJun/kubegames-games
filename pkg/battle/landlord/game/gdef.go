@@ -9,7 +9,7 @@ import (
 // 钻石 FlowerType = iota + 1
 type FlowerType int
 
-// landlord 从扑克牌开始
+// landlord 1从扑克牌开始
 const (
 	//方块
 	DIAMOND FlowerType = iota + 1

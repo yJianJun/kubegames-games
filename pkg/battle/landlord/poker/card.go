@@ -8,10 +8,26 @@ import (
 
 // GamePoker 牌堆
 type GamePoker struct {
+	// 1个字节表示1张牌 字节数组表示1手牌
 	Cards []byte
 }
 
-// 使用一副牌, 共54张牌 大小关系：大王>小王>2>A>K>…>4>3 方梅红黑
+// Deck 是一个变量，表示字节数组中的一副纸牌。
+// 这是一副标准的 54 张牌，顺序从高到低：
+// 大王, 小王, 2, A, K, Q, J, 10, 9, 8, 7, 6, 5, 4, 3,
+// 方1, 梅1, 红1, 黑1,
+// 方2, 梅2, 红2, 黑2,
+// 方3, 梅3, 红3, 黑3,
+// 方4, 梅4, 红4, 黑4,
+// 方5, 梅5, 红5, 黑5,
+// 方6, 梅6, 红6, 黑6,
+// 方7, 梅7, 红7, 黑7,
+// 方8, 梅8, 红8, 黑8,
+// 方9, 梅9, 红9, 黑9,
+// 方10, 梅10, 红10, 黑10,
+// 方J, 梅J, 红J, 黑J,
+// 方Q, 梅Q, 红Q, 黑Q,
+// 方K, 梅K, 红K, 黑K
 var Deck = []byte{
 	//3 , 4   , 5   , 6   , 7   , 8   , 9   , 10  , J   , Q   , K   , A   , 2   , 小王 , 大王
 	0x11, 0x21, 0x31, 0x41, 0x51, 0x61, 0x71, 0x81, 0x91, 0xa1, 0xb1, 0xc1, 0xd1, 0xe1, 0xf1,
@@ -20,6 +36,7 @@ var Deck = []byte{
 	0x14, 0x24, 0x34, 0x44, 0x54, 0x64, 0x74, 0x84, 0x94, 0xa4, 0xb4, 0xc4, 0xd4,
 }
 
+// Unit 是一个字节片，包含表示一个单元的一系列值。
 var Unit = []byte{
 	0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd,
 }
@@ -32,14 +49,20 @@ type HandCards struct {
 	CardsType   int32  // 牌型
 }
 
-// SolutionCards 牌解
+// SolutionCards 代表游戏场景中，出牌的潜在方案。
 type SolutionCards struct {
-	Cards     []byte        // 手牌
-	CardsType msg.CardsType // 牌型
-	PutScore  int           // 出牌权值
+	// Cards 以字节格式表示一手牌。
+	Cards []byte
+
+	// CardsType代表手牌的类型。
+	CardsType msg.CardsType
+
+	// PutScore 表示手中牌的分数。
+	PutScore int
 }
 
-// InitPoker 初始化牌组
+// landlord 2一副扑克牌
+// InitPoker 一副新牌
 func (gamePoker *GamePoker) InitPoker() {
 
 	for _, v := range Deck {
@@ -47,6 +70,7 @@ func (gamePoker *GamePoker) InitPoker() {
 	}
 }
 
+// landlord 2一副扑克牌
 // ShuffleCards 洗牌
 func (gamePoker *GamePoker) ShuffleCards() {
 	rand.Shuffle(len(gamePoker.Cards), func(i, j int) {
@@ -54,7 +78,11 @@ func (gamePoker *GamePoker) ShuffleCards() {
 	})
 }
 
-// DrawCard
+// DrawCard 从牌堆中抽取指定数量的牌。
+// 参数：
+// count：从牌堆中抽出的牌数。
+// 返回：
+// 卡：包含抽出的卡的字节数组。
 func (gamePoker *GamePoker) DrawCard(count int) (cards []byte) {
 
 	length := len(gamePoker.Cards)
@@ -87,7 +115,9 @@ func ReverseSortCards(cards []byte) []byte {
 	return cards
 }
 
-// PositiveSortCards 手牌正序排序
+// PositiveSortCards 按升序对一手牌进行排序。
+// 它使用冒泡排序算法来比较相邻的卡片，并在必要时交换它们。
+// 然后返回排序后的手牌。
 func PositiveSortCards(cards []byte) []byte {
 	for i := 0; i < len(cards)-1; i++ {
 		for j := 0; j < (len(cards) - 1 - i); j++ {
@@ -99,7 +129,7 @@ func PositiveSortCards(cards []byte) []byte {
 	return cards
 }
 
-// 将牌按照牌值进行排序
+// SortCards 将牌按照牌值进行排序
 func SortCards(cards []byte) []byte {
 	for i := 0; i < len(cards)-1; i++ {
 		for j := 0; j < (len(cards) - 1 - i); j++ {
@@ -200,58 +230,61 @@ func GetValue2Count(cards []byte) (count int) {
 	return count
 }
 
-// ContrastCards 比牌 true/false 表示 能/不能 大过
+// landlord 2一副扑克牌
+// ContrastCards 对比两组牌的大小 true/false 表示 能/不能 大过
 // @curCards 比较牌
 // @lastCards 被比较牌
 func ContrastCards(curCards []byte, lastCards []byte) bool {
 
+	// 获取当前和上次打出的牌的类型
 	curType, lastType := GetCardsType(curCards), GetCardsType(lastCards)
 
-	// 牌型相同
+	// 卡的类型相同
 	if curType == lastType {
 
-		// 从原牌组获取用于编码的牌组
+		// 获取新的卡组进行编码
 		newCurCards, newLastCards := curCards, lastCards
 
+		// 切换不同卡类型的大小写结构
 		switch curType {
-		// 四带二,四带二对子
+
+		// 对于“两个四重奏”和“两对四重奏”
 		case msg.CardsType_QuartetWithTwo, msg.CardsType_QuartetWithTwoPair:
 			newCurCards, newLastCards = GetRepeatedCards(curCards, 4), GetRepeatedCards(lastCards, 4)
 			break
 
-		// 三带一, 三代一对, 飞机带对子
+		// 对于“带单的三联体”、“带对的三联体”、“带翼的串行三联体”
 		case msg.CardsType_TripletWithSingle, msg.CardsType_TripletWithPair, msg.CardsType_SerialTripletWithWing:
 			newCurCards, newLastCards = GetRepeatedCards(curCards, 3), GetRepeatedCards(lastCards, 3)
 			break
 
-		// 飞机带单张
+		// 对于“带有一个的串行三元组”
 		case msg.CardsType_SerialTripletWithOne:
 			newCurCards, _ = GetPlane(curCards)
 			newLastCards, _ = GetPlane(lastCards)
-
 			break
 		}
 
-		// 长度比较
+		// 检查卡片的长度是否相同
 		if len(newCurCards) != len(newLastCards) {
 			return false
 		}
 
-		// 获取牌对编码，进行比较
+		// 获取卡片编码并进行比较
 		curCode, lastCode := EncodeCard(newCurCards), EncodeCard(newLastCards)
 
 		if curCode > lastCode {
 			return true
 		}
-
 	} else {
-		// 牌型不同，只能是 火箭 > 炸弹 > 其他牌
+		// 卡牌类型不同
+		// 只比较火箭>炸弹>其他卡牌
 		if curType == msg.CardsType_Rocket || (curType == msg.CardsType_Bomb && lastType < msg.CardsType_Bomb) {
 			return true
 		}
-
 	}
 
+	// 在所有其他情况下返回 false
 	return false
 }
 
@@ -437,7 +470,7 @@ func CardsToString(cards []byte) (cardsStr string) {
 	return
 }
 
-// landlord 从扑克牌开始
+// landlord 1从扑克牌开始
 // TransformCards 转译牌
 // 将字节切片表示的牌转译为字符串表示的牌
 // 输入参数cards是一个字节切片，其中每个字节表示一张牌
