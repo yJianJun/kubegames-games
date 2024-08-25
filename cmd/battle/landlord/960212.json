@@ -1,6 +1,6 @@
 [
   {
-    "gameID": 960212,
+    "gameID": landlord,
     "name": "斗地主",
     "config": {
       "platform": "platform.kubegames.svc:8433",
@@ -9,8 +9,8 @@
     }
   },
   {
-    "gameID": 960212,
-    "image": "kubegames/960212:latest",
+    "gameID": landlord,
+    "image": "kubegames/landlord:latest",
     "replicas": 1,
     "port": 8433,
     "commonds": [],
@@ -20,7 +20,7 @@
   {
     "platformID": 1,
     "roomID": 96021211,
-    "gameID": 960212,
+    "gameID": landlord,
     "level": 1,
     "name": "斗地主-初级房",
     "rate": 500,
@@ -42,7 +42,7 @@
   {
     "platformID": 1,
     "roomID": 96021212,
-    "gameID": 960212,
+    "gameID": landlord,
     "level": 2,
     "name": "斗地主-中级场",
     "rate": 500,
@@ -64,7 +64,7 @@
   {
     "platformID": 1,
     "roomID": 96021213,
-    "gameID": 960212,
+    "gameID": landlord,
     "level": 3,
     "name": "斗地主-高级场",
     "rate": 500,
@@ -86,7 +86,7 @@
   {
     "platformID": 1,
     "roomID": 96021214,
-    "gameID": 960212,
+    "gameID": landlord,
     "level": 4,
     "name": "斗地主-大师场",
     "rate": 500,
