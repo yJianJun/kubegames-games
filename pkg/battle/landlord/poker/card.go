@@ -248,17 +248,17 @@ func ContrastCards(curCards []byte, lastCards []byte) bool {
 		// 切换不同卡类型的大小写结构
 		switch curType {
 
-		// 对于“两个四重奏”和“两对四重奏”
+		// 四带二,四带二对子
 		case msg.CardsType_QuartetWithTwo, msg.CardsType_QuartetWithTwoPair:
 			newCurCards, newLastCards = GetRepeatedCards(curCards, 4), GetRepeatedCards(lastCards, 4)
 			break
 
-		// 对于“带单的三联体”、“带对的三联体”、“带翼的串行三联体”
+		// 三带一, 三代一对, 飞机带对子
 		case msg.CardsType_TripletWithSingle, msg.CardsType_TripletWithPair, msg.CardsType_SerialTripletWithWing:
 			newCurCards, newLastCards = GetRepeatedCards(curCards, 3), GetRepeatedCards(lastCards, 3)
 			break
 
-		// 对于“带有一个的串行三元组”
+		// 飞机带单张
 		case msg.CardsType_SerialTripletWithOne:
 			newCurCards, _ = GetPlane(curCards)
 			newLastCards, _ = GetPlane(lastCards)
@@ -278,7 +278,7 @@ func ContrastCards(curCards []byte, lastCards []byte) bool {
 		}
 	} else {
 		// 卡牌类型不同
-		// 只比较火箭>炸弹>其他卡牌
+		// 火箭 > 炸弹 > 其他牌
 		if curType == msg.CardsType_Rocket || (curType == msg.CardsType_Bomb && lastType < msg.CardsType_Bomb) {
 			return true
 		}
