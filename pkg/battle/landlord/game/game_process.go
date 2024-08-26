@@ -30,6 +30,7 @@ func (game *DouDizhu) Start() {
 	game.DealCards()
 }
 
+// landlord 3斗地主给其他三家玩家发牌
 // DealCards 发牌阶段
 func (game *DouDizhu) DealCards() {
 
@@ -163,6 +164,7 @@ func (game *DouDizhu) CheckRob() {
 	}
 }
 
+// landlord 4叫地主和抢地主
 // confirmDizhu 确认地主阶段
 func (game *DouDizhu) confirmDizhu() {
 

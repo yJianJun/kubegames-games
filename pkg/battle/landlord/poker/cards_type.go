@@ -2,6 +2,7 @@ package poker
 
 import "github.com/kubegames/kubegames-games/pkg/battle/landlord/msg"
 
+// landlord 5牌型
 // GetCardsType 获取牌型
 func GetCardsType(cards []byte) (cardsType msg.CardsType) {
 
@@ -78,6 +79,7 @@ func GetCardsType(cards []byte) (cardsType msg.CardsType) {
 	return
 }
 
+// landlord 5牌型
 // IsSingleCard 是否是单张牌
 func IsSingleCard(cards []byte) bool {
 

@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/bitly/go-simplejson"
 	"github.com/kubegames/kubegames-games/internal/pkg/rand"
 	"github.com/kubegames/kubegames-games/pkg/battle/landlord/config"
 	"github.com/kubegames/kubegames-games/pkg/battle/landlord/data"

@@ -40,6 +40,7 @@ func ExcludeOne(srcCard []byte, ddz []uint32) ([]byte, []byte) {
 	return srcCard, cardSlice
 }
 
+// landlord 5牌型
 // 获取一组牌的牌型
 func GetCardsType(cards []byte) msg.CardsType {
 	//重新创建切片，不改变原切片的数据
@@ -108,6 +109,7 @@ func GetCardsType(cards []byte) msg.CardsType {
 	return cardstype
 }
 
+// landlord 5牌型
 // 是否是顺子
 func IsStraight(cards []byte) (bool, msg.CardsType) {
 	var length = len(cards)
