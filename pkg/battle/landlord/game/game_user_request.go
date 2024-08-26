@@ -10,6 +10,7 @@ import (
 	"github.com/kubegames/kubegames-sdk/pkg/player"
 )
 
+// landlord 4叫地主和抢地主
 // UserRobDizhu 玩家抢地主请求
 func (game *DouDizhu) UserRobDizhu(buffer []byte, userInter player.PlayerInterface) {
 
@@ -188,6 +189,7 @@ func (game *DouDizhu) UserRedouble(buffer []byte, userInter player.PlayerInterfa
 
 }
 
+// landlord 6打牌和跟牌
 // UserPutCards 玩家出牌请求
 func (game *DouDizhu) UserPutCards(buffer []byte, userInter player.PlayerInterface) {
 

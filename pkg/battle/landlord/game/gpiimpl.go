@@ -38,7 +38,6 @@ func B3cfgInit() {
 	}
 }
 
-// landlord 4叫地主和抢地主
 // CreateBehaviorTree 创建行为树
 func CreateBehaviorTree() *b3core.BehaviorTree {
 	B3cfgInit()
@@ -129,7 +128,6 @@ func (cab *doOutCard) OnTick(tick *b3core.Tick) b3.Status {
 	}
 }
 
-// landlord 4叫地主和抢地主
 func (cab *callbanker) Initialize(setting *b3cfg.BTNodeCfg) {
 	cab.Action.Initialize(setting)
 	cab.call = GetProperty("call", setting) //GetValueAsInt(setting, "calltype", 0)
