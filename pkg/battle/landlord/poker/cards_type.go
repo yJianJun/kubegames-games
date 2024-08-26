@@ -2,7 +2,6 @@ package poker
 
 import "github.com/kubegames/kubegames-games/pkg/battle/landlord/msg"
 
-// landlord 5牌型
 // GetCardsType 获取牌型
 func GetCardsType(cards []byte) (cardsType msg.CardsType) {
 
@@ -79,7 +78,6 @@ func GetCardsType(cards []byte) (cardsType msg.CardsType) {
 	return
 }
 
-// landlord 5牌型
 // IsSingleCard 是否是单张牌
 func IsSingleCard(cards []byte) bool {
 
@@ -109,27 +107,25 @@ func IsPair(cards []byte) bool {
 	return true
 }
 
-// IsTriplet 是否三同张
+// IsTriplet 检查给定的卡片是否构成三元组。
 func IsTriplet(cards []byte) bool {
-
+	// 如果切片不包含正好三张卡片，则它不能是三元组。
 	if len(cards) != 3 {
 		return false
 	}
-
-	// 正序排序
+	// 按升序对卡片进行排序。
 	cards = PositiveSortCards(cards)
-
-	// 牌值检测
+	// 检查排序切片中第一张和最后一张卡片的值
 	firstValue, _ := GetCardValueAndColor(cards[0])
 	lastValue, _ := GetCardValueAndColor(cards[len(cards)-1])
+	// 如果第一张牌和最后一张牌的值相同，则它们形成三元组。
 	if firstValue != lastValue {
 		return false
 	}
-
 	return true
 }
 
-// IsTripletWithSingle 是否三带一
+// IsTripletWithSingle 是否是三带一
 func IsTripletWithSingle(cards []byte) bool {
 	if len(cards) != 4 {
 		return false
@@ -145,7 +141,7 @@ func IsTripletWithSingle(cards []byte) bool {
 	return false
 }
 
-// IsTripletWithPair 是否三带一对
+// IsTripletWithPair 是否是三带对子
 func IsTripletWithPair(cards []byte) bool {
 
 	// 牌数检测
@@ -162,7 +158,7 @@ func IsTripletWithPair(cards []byte) bool {
 	return false
 }
 
-// IsSequence 是否顺子
+// IsSequence 是否是顺子
 func IsSequence(cards []byte) bool {
 
 	// 牌数检测
@@ -194,7 +190,7 @@ func IsSequence(cards []byte) bool {
 	return true
 }
 
-// IsSerialPair 是否连对
+// IsSerialPair 是否是连对
 func IsSerialPair(cards []byte) bool {
 
 	// 牌数检测
@@ -220,7 +216,7 @@ func IsSerialPair(cards []byte) bool {
 	return false
 }
 
-// IsSerialTriplet 是否飞机
+// IsSerialTriplet 是否是飞机
 func IsSerialTriplet(cards []byte) bool {
 
 	// 牌数检测
@@ -247,7 +243,7 @@ func IsSerialTriplet(cards []byte) bool {
 	return false
 }
 
-// IsSerialTripletWithOne 是否飞机带单牌
+// IsSerialTripletWithOne 是否是飞机带单牌
 func IsSerialTripletWithOne(cards []byte) bool {
 	// 牌数检测
 	count := len(cards)
@@ -280,7 +276,7 @@ func IsSerialTripletWithOne(cards []byte) bool {
 	return true
 }
 
-// IsSerialTripletWithWing 是否飞机带对子
+// IsSerialTripletWithWing 是否是飞机带对子
 func IsSerialTripletWithWing(cards []byte) bool {
 	// 牌数检测
 	count := len(cards)
@@ -320,7 +316,7 @@ func IsSerialTripletWithWing(cards []byte) bool {
 	return true
 }
 
-// IsQuartetWithTwo 是否四带二
+// IsQuartetWithTwo 是否是四带二
 func IsQuartetWithTwo(cards []byte) bool {
 	count := len(cards)
 
@@ -346,7 +342,7 @@ func IsQuartetWithTwo(cards []byte) bool {
 	return true
 }
 
-// IsQuartetWithTwoPair 是否四带两对
+// IsQuartetWithTwoPair 是否是四带两对
 func IsQuartetWithTwoPair(cards []byte) bool {
 	count := len(cards)
 
@@ -367,7 +363,7 @@ func IsQuartetWithTwoPair(cards []byte) bool {
 	return true
 }
 
-// IsBomb 是否炸弹
+// IsBomb 是否是炸弹
 func IsBomb(cards []byte) bool {
 	if len(cards) != 4 {
 		return false
@@ -387,7 +383,7 @@ func IsBomb(cards []byte) bool {
 	return false
 }
 
-// IsRocket 是否火箭
+// IsRocket 是否是火箭
 func IsRocket(cards []byte) bool {
 
 	if len(cards) == 2 && HaveRocket(cards) {

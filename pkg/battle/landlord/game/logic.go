@@ -40,7 +40,6 @@ func ExcludeOne(srcCard []byte, ddz []uint32) ([]byte, []byte) {
 	return srcCard, cardSlice
 }
 
-// landlord 5牌型
 // 获取一组牌的牌型
 func GetCardsType(cards []byte) msg.CardsType {
 	//重新创建切片，不改变原切片的数据
@@ -109,7 +108,6 @@ func GetCardsType(cards []byte) msg.CardsType {
 	return cardstype
 }
 
-// landlord 5牌型
 // 是否是顺子
 func IsStraight(cards []byte) (bool, msg.CardsType) {
 	var length = len(cards)
@@ -202,7 +200,7 @@ func IsFourAndTwo(cards []byte) (bool, msg.CardsType) {
 	return false, msg.CardsType_Normal
 }
 
-// 是否是飞机带翅膀
+// 是否是飞机
 func IsAirPlane(cards []byte) (bool, msg.CardsType) {
 	if bflag, startnum, endnum := IsHasThreeStraight(cards); bflag {
 		length := len(cards)
@@ -242,7 +240,7 @@ func IsAirPlane(cards []byte) (bool, msg.CardsType) {
 	return false, msg.CardsType_Normal
 }
 
-// 是否有三顺子
+// 是否有三顺子（飞机不带翅膀）
 func IsHasThreeStraight(cards []byte) (bool, int, int) {
 	var length = len(cards)
 	if length < 6 {
@@ -266,7 +264,18 @@ func IsHasThreeStraight(cards []byte) (bool, int, int) {
 	return result, startnum, endnum
 }
 
-// 获取飞机牌型中的三顺子头尾数字, 参数只支持飞机带翅膀牌型, 不带翅膀的飞机是三顺子
+// 是否有炸弹
+func IsHasBomb(cards []byte) (bool, int) {
+	_, counts := GetCardCounts(cards)
+	for i := 13; i >= 1; i-- {
+		if counts[i] == 4 {
+			return true, i
+		}
+	}
+	return false, 0
+}
+
+// 获取飞机牌型中的三顺子头尾数字, 参数只支持飞机
 func GetAirPlaneStartEnd(cards []byte) (int, int) {
 	length := len(cards)
 	_, counts := GetCardCounts(cards)
@@ -306,17 +315,6 @@ outloop:
 		}
 	}
 	return rtStart, rtEnd
-}
-
-// 是否有炸弹
-func IsHasBomb(cards []byte) (bool, int) {
-	_, counts := GetCardCounts(cards)
-	for i := 13; i >= 1; i-- {
-		if counts[i] == 4 {
-			return true, i
-		}
-	}
-	return false, 0
 }
 
 // 比较2组牌的大小,cards2 > cards1 返回true, 否则false

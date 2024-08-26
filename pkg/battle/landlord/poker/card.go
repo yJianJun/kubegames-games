@@ -61,7 +61,6 @@ type SolutionCards struct {
 	PutScore int
 }
 
-// landlord 2一副扑克牌
 // InitPoker 一副新牌
 func (gamePoker *GamePoker) InitPoker() {
 
@@ -70,7 +69,6 @@ func (gamePoker *GamePoker) InitPoker() {
 	}
 }
 
-// landlord 2一副扑克牌
 // ShuffleCards 洗牌
 func (gamePoker *GamePoker) ShuffleCards() {
 	rand.Shuffle(len(gamePoker.Cards), func(i, j int) {
@@ -230,7 +228,6 @@ func GetValue2Count(cards []byte) (count int) {
 	return count
 }
 
-// landlord 2一副扑克牌
 // ContrastCards 对比两手牌的大小 true/false 表示 能/不能 大过
 // @curCards 比较牌
 // @lastCards 被比较牌
@@ -470,7 +467,6 @@ func CardsToString(cards []byte) (cardsStr string) {
 	return
 }
 
-// landlord 1从扑克牌开始
 // TransformCards 转译牌
 // 将字节切片表示的牌转译为字符串表示的牌
 // 输入参数cards是一个字节切片，其中每个字节表示一张牌
