@@ -231,7 +231,7 @@ func GetValue2Count(cards []byte) (count int) {
 }
 
 // landlord 2一副扑克牌
-// ContrastCards 对比两组牌的大小 true/false 表示 能/不能 大过
+// ContrastCards 对比两手牌的大小 true/false 表示 能/不能 大过
 // @curCards 比较牌
 // @lastCards 被比较牌
 func ContrastCards(curCards []byte, lastCards []byte) bool {
