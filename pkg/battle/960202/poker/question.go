@@ -1,26 +1,25 @@
 package poker
 
-type Seller struct {
-	wallet []int
-}
+var wallet = []int{5}
 
-func NewSeller() *Seller {
-	return &Seller{wallet: []int{5}}
-}
+const price = 5
 
-// 商人有5元 奶茶销售5元 来了A、B、C三人  A支付10元 B支付15元  C支付20元 找钱流程
-const CostOfTea = 5 // 引入茶成本常数
-
-// ProcessPayment 在收到付款并找零后重新计算卖家的钱包
-func (s *Seller) ProcessPayment(payment int) int {
-	changeNeeded := payment - CostOfTea
-	newWallet := make([]int, 0) // 为了清晰起见，重命名为 newWallet
-
-	for _, bill := range s.wallet {
-		if bill != changeNeeded {
-			newWallet = append(newWallet, bill)
+// 商人有5元 奶茶价格是5元 来了A、B、C三人  A支付10元 B支付15元  C支付20元 找钱流程
+func giveMoney(pay int) int {
+	change := pay - price
+	newWallet := make([]int, 0)
+	for _, money := range wallet {
+		if money != change {
+			newWallet = append(newWallet, money)
 		}
 	}
-	s.wallet = newWallet // 支付过程结束后重新计算钱包
-	return changeNeeded
+	if len(newWallet) == len(wallet) {
+		// 如果没有找零则退款
+		return pay
+	} else {
+		// 将付款添加到钱包并找零
+		newWallet = append(newWallet, pay)
+		wallet = newWallet
+		return change
+	}
 }
