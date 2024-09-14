@@ -10,14 +10,14 @@ func A(x, y chan int) {
 	<-x
 	fmt.Println("A()!")
 	time.Sleep(time.Second)
-	close(y)
+	y <- 1
 }
 
 // B首先被a阻塞，B()结束后关闭b，使b可读
 func B(y, z chan int) {
 	<-y
 	fmt.Println("B()!")
-	close(z)
+	z <- 2
 }
 
 // C首先被a阻塞
@@ -36,7 +36,6 @@ func interview() {
 	go B(y, z)
 	go C(z)
 
-	// 关闭x，让x可读  关闭的channel中可以不断的读取零值
-	close(x)
+	x <- 0
 	time.Sleep(3 * time.Second)
 }
