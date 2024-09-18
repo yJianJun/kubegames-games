@@ -2,40 +2,38 @@ package poker
 
 import (
 	"fmt"
-	"time"
+	"sync"
 )
 
-// A首先被a阻塞，A()结束后关闭b，使b可读
-func A(x, y chan int) {
-	<-x
-	fmt.Println("A()!")
-	time.Sleep(time.Second)
-	y <- 1
-}
-
-// B首先被a阻塞，B()结束后关闭b，使b可读
-func B(y, z chan int) {
-	<-y
-	fmt.Println("B()!")
-	z <- 2
-}
-
-// C首先被a阻塞
-func C(z chan int) {
-	<-z
-	fmt.Println("C()!")
-}
-
 func interview() {
-	x := make(chan int)
-	y := make(chan int)
-	z := make(chan int)
+	channelA := make(chan int)
+	channelB := make(chan int)
+	channelC := make(chan int)
+	waitGroup := sync.WaitGroup{}
+	waitGroup.Add(3)
+	go A(channelA, channelB, &waitGroup)
+	go B(channelB, channelC, &waitGroup)
+	go C(channelC, &waitGroup)
+	channelA <- 0
+	waitGroup.Wait()
+}
 
-	//上1个执行结束 开启下1个trigger
-	go A(x, y)
-	go B(y, z)
-	go C(z)
+func C(c chan int, s *sync.WaitGroup) {
+	<-c
+	fmt.Println("---------------C--------------")
+	s.Done()
+}
 
-	x <- 0
-	time.Sleep(3 * time.Second)
+func B(b chan int, c chan int, s *sync.WaitGroup) {
+	<-b
+	fmt.Println("---------------B----------------")
+	s.Done()
+	c <- 2
+}
+
+func A(a chan int, b chan int, s *sync.WaitGroup) {
+	<-a
+	fmt.Println("---------------A-----------------")
+	s.Done()
+	b <- 1
 }
